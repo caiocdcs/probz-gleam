@@ -1,0 +1,14 @@
+# Gleam
+*.beam
+*.ez
+/build
+erl_crash.dump
+
+# Nix / direnv
+/result
+/result-*
+/.direnv
+
+# Local
+.env
+.DS_Store

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommits"],
+  "timezone": "Europe/Lisbon",
+  "schedule": ["before 6am on monday"],
+  "labels": ["dependencies"],
+  "nix": { "enabled": true },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"],
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "description": "Patch and minor updates merge themselves once CI is green",
+      "matchUpdateTypes": ["patch", "minor", "digest"],
+      "automerge": true
+    },
+    {
+      "groupName": "gleam",
+      "matchManagers": ["gleam"],
+      "matchUpdateTypes": ["patch", "minor"]
+    },
+    {
+      "groupName": "forgejo actions",
+      "matchManagers": ["github-actions"]
+    }
+  ]
+}

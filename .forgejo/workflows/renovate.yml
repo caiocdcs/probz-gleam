@@ -1,0 +1,26 @@
+# Opens dependency PRs per renovate.json, as the bot account (BOT_TOKEN), with
+# commits signed by CI_SIGNING_KEY: the raw SSH private key registered on the
+# bot's Forgejo account (Renovate reads base64-encoded keys as GPG).
+name: Renovate
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  renovate:
+    runs-on: alpine
+    container:
+      image: renovate/renovate:44.209.0@sha256:3609f05e0513fddd410666053c1a849397b57df40d68ec37fd747c7703222407
+    steps:
+      - name: renovate
+        shell: sh
+        env:
+          RENOVATE_TOKEN: ${{ secrets.BOT_TOKEN }}
+          RENOVATE_PLATFORM: gitea
+          RENOVATE_ENDPOINT: ${{ github.server_url }}
+          RENOVATE_GIT_PRIVATE_KEY: ${{ secrets.CI_SIGNING_KEY }}
+          REPO: ${{ github.repository }}
+          LOG_LEVEL: info
+        run: renovate "$REPO"

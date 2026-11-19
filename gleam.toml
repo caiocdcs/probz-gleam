@@ -1,0 +1,17 @@
+name = "probz"
+version = "0.1.0"
+description = "Probabilistic data structures (Bloom, cuckoo, quotient filters, HyperLogLog, Count-Min, t-digest, MinHash LSH...) with a portable wire format"
+licences = ["MIT"]
+repository = { type = "github", user = "caiocdcs", repo = "probz-gleam" }
+links = [{ title = "Specification", href = "https://github.com/caiocdcs/probz-gleam/blob/main/SPEC.md" }]
+target = "erlang"
+gleam = ">= 1.14.0"
+
+[dependencies]
+gleam_stdlib = ">= 1.0.0 and < 2.0.0"
+iv = ">= 1.4.4 and < 2.0.0"
+
+[dev_dependencies]
+gleeunit = ">= 1.0.0 and < 2.0.0"
+gleam_json = ">= 3.1.0 and < 4.0.0"
+simplifile = ">= 2.7.0 and < 3.0.0"
