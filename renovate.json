@@ -1,28 +1,56 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    "helpers:pinGitHubActionDigestsToSemver"
   ],
-  "enabledManagers": ["gleam", "nix"],
-  "nix": { "enabled": true },
-  "lockFileMaintenance": { "enabled": true },
+  "enabledManagers": [
+    "gleam",
+    "nix",
+    "github-actions"
+  ],
+  "pinDigests": true,
+  "nix": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "minimumReleaseAge": "3 days",
   "minimumReleaseAgeBehaviour": "timestamp-optional",
   "gitAuthor": "Caio Silva <caio@cdcs.dev>",
-  "labels": ["renovate"],
+  "labels": [
+    "renovate"
+  ],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "dependencyDashboardApproval": true,
   "rebaseWhen": "conflicted",
   "packageRules": [
     {
-      "matchManagers": ["gleam"],
-      "matchUpdateTypes": ["major", "minor", "patch"],
+      "matchManagers": [
+        "gleam",
+        "nix",
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ],
       "automerge": false
     },
     {
-      "matchManagers": ["nix"],
+      "matchManagers": [
+        "nix"
+      ],
       "automerge": false
+    },
+    {
+      "groupName": "forgejo actions",
+      "matchManagers": [
+        "github-actions"
+      ]
     }
   ]
 }
