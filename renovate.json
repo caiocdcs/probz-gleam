@@ -1,29 +1,28 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":semanticCommits"],
-  "timezone": "Europe/Lisbon",
-  "schedule": ["before 6am on monday"],
-  "labels": ["dependencies"],
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": ["gleam", "nix"],
   "nix": { "enabled": true },
-  "lockFileMaintenance": {
-    "enabled": true,
-    "schedule": ["before 6am on monday"],
-    "automerge": true
-  },
+  "lockFileMaintenance": { "enabled": true },
+  "minimumReleaseAge": "3 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
+  "gitAuthor": "Caio Silva <caio@cdcs.dev>",
+  "labels": ["renovate"],
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "dependencyDashboardApproval": true,
+  "rebaseWhen": "conflicted",
   "packageRules": [
     {
-      "description": "Patch and minor updates merge themselves once CI is green",
-      "matchUpdateTypes": ["patch", "minor", "digest"],
-      "automerge": true
-    },
-    {
-      "groupName": "gleam",
       "matchManagers": ["gleam"],
-      "matchUpdateTypes": ["patch", "minor"]
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "automerge": false
     },
     {
-      "groupName": "forgejo actions",
-      "matchManagers": ["github-actions"]
+      "matchManagers": ["nix"],
+      "automerge": false
     }
   ]
 }
