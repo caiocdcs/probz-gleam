@@ -87,7 +87,8 @@ Conventions shared by all structures:
   structure. Storage is a persistent array ([iv](https://hex.pm/packages/iv)),
   so an update copies O(log n) rather than the whole structure.
 - `new(...)` takes labelled parameters and returns a `Result`.
-- `add` / `add_hash`, `contains` / `contains_hash`, `remove`, `count`,
+- `add` / `add_hash`, `contains` / `contains_hash`,
+  `add_many` / `add_hash_many` on the Bloom filters, `remove`, `count`,
   `merge`, `clear`, `serialize`, `deserialize`. Keys are `BitArray`s, or a
   precomputed XxHash64 from `probz/hash` (`hash_bytes`, `hash_string`, or
   `hash_int` / `hash_float` / `hash_bool` with the same byte encoding as the
@@ -124,17 +125,21 @@ slower than the Zig library.
 
 | Structure | add (ns) | query (ns) | serialized |
 |---|--:|--:|--:|
-| BloomFilter (p = 1%) | 900 | 100 | 120 KB |
-| BlockedBloomFilter (p = 1%) | 750 | 190 | 124 KB |
-| CountingBloomFilter (w = 4) | 3500 | 460 | 479 KB |
-| ScalableBloomFilter (n₀ = 10k) | 1300 | 380 | 279 KB |
-| CuckooFilter (f = 16, b = 4) | 340 | 200 | 262 KB |
-| QuotientFilter (q = 18, r = 8) | 680 | 90 | 361 KB |
-| HyperLogLog (p = 14) | 180 | 3000 (cardinality) | 16 KB |
-| CountMinSketch (ε = 0.001, δ = 0.01) | 1200 | 860 | 54 KB |
-| SpaceSaving (m = 1000, skewed) | 490 | 1600 | 36 KB |
-| TDigest (δ = 100) | 200 | 2000 (p50) | 1 KB |
-| QDigest (σ = 2³², k = 256) | 700 | 119 µs (p50) | 15 KB |
+| BloomFilter (p = 1%) | 660 | 80 | 120 KB |
+| BlockedBloomFilter (p = 1%) | 540 | 150 | 124 KB |
+| CountingBloomFilter (w = 4) | 2400 | 340 | 479 KB |
+| ScalableBloomFilter (n₀ = 10k) | 980 | 280 | 279 KB |
+| CuckooFilter (f = 16, b = 4) | 250 | 200 | 262 KB |
+| QuotientFilter (q = 18, r = 8) | 620 | 80 | 361 KB |
+| HyperLogLog (p = 14) | 150 | 2000 (cardinality) | 16 KB |
+| CountMinSketch (ε = 0.001, δ = 0.01) | 1100 | 780 | 54 KB |
+| SpaceSaving (m = 1000, skewed) | 450 | 1500 | 36 KB |
+| TDigest (δ = 100) | 170 | 1000 (p50) | 1 KB |
+| QDigest (σ = 2³², k = 256) | 680 | 109 µs (p50) | 15 KB |
+
+Bit arrays use 32-bit words internally so every word stays a BEAM small
+integer (64-bit words would be heap bignums), while the wire format keeps
+u64 words.
 
 ## Other languages
 
