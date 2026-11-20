@@ -9,10 +9,8 @@
 //// is internal words 2j (low half) and 2j + 1 (high half).
 
 import gleam/bit_array
-import gleam/dict
 import gleam/int
 import gleam/list
-import gleam/option
 import gleam/result
 import iv
 import probz/internal/u64
@@ -49,25 +47,6 @@ pub fn is_set(b: Bits, i: Int) -> Bool {
 pub fn set(b: Bits, i: Int) -> Bits {
   let m = mask(i)
   Bits(..b, words: iv.try_update(b.words, i / word_bits, int.bitwise_or(_, m)))
-}
-
-/// Set every index in `indexes`, updating each touched word once.
-pub fn set_many(b: Bits, indexes: List(Int)) -> Bits {
-  let masks =
-    list.fold(indexes, dict.new(), fn(masks, i) {
-      let m = mask(i)
-      dict.upsert(masks, i / word_bits, fn(old) {
-        case old {
-          option.Some(old) -> int.bitwise_or(old, m)
-          option.None -> m
-        }
-      })
-    })
-  let words =
-    dict.fold(masks, b.words, fn(words, w, m) {
-      iv.try_update(words, w, int.bitwise_or(_, m))
-    })
-  Bits(..b, words:)
 }
 
 pub fn unset(b: Bits, i: Int) -> Bits {
