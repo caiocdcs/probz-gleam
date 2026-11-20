@@ -28,6 +28,7 @@
 //// ```
 
 import gleam/int
+import gleam/list
 import gleam/result
 import probz/hash
 import probz/internal/bits.{type Bits}
@@ -84,6 +85,16 @@ pub fn add(filter: BloomFilter, item: BitArray) -> BloomFilter {
 /// Insert a precomputed XxHash64 (see `probz/hash`).
 pub fn add_hash(filter: BloomFilter, h: Int) -> BloomFilter {
   BloomFilter(..filter, bits: bloom.add_hash(filter.bits, filter.k, h))
+}
+
+/// Insert every item, in order: the same as folding `add`.
+pub fn add_many(filter: BloomFilter, items: List(BitArray)) -> BloomFilter {
+  add_hash_many(filter, list.map(items, hash.hash_bytes))
+}
+
+/// `add_many` for precomputed hashes.
+pub fn add_hash_many(filter: BloomFilter, hashes: List(Int)) -> BloomFilter {
+  list.fold(hashes, filter, add_hash)
 }
 
 /// True if the item may have been inserted; False means it never was.

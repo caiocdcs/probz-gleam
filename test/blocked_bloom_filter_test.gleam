@@ -81,3 +81,18 @@ pub fn vectors_test() {
   assert bbf.serialize(f) == bytes
   assert bbf.deserialize(bytes) == Ok(f)
 }
+
+pub fn add_many_matches_add_test() {
+  let assert Ok(f) = bbf.new_exact(4, 8)
+  let items = vectors.items(0, 100)
+  let one_by_one = list.fold(items, f, bbf.add)
+  assert bbf.add_many(f, items) == one_by_one
+  assert bbf.add_hash_many(f, list.map(items, hash.hash_bytes)) == one_by_one
+  assert bbf.add_many(f, []) == f
+  assert bbf.serialize(bbf.add_many(f, items))
+    == vectors.get(
+      vectors.load("blocked_bloom_filter"),
+      ["serialized"],
+      vectors.hex_bytes(),
+    )
+}

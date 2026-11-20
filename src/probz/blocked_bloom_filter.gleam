@@ -171,6 +171,22 @@ pub fn add_hash(filter: BlockedBloomFilter, h: Int) -> BlockedBloomFilter {
   BlockedBloomFilter(..filter, bits: b)
 }
 
+/// Insert every item, in order: the same as folding `add`.
+pub fn add_many(
+  filter: BlockedBloomFilter,
+  items: List(BitArray),
+) -> BlockedBloomFilter {
+  add_hash_many(filter, list.map(items, hash.hash_bytes))
+}
+
+/// `add_many` for precomputed hashes.
+pub fn add_hash_many(
+  filter: BlockedBloomFilter,
+  hashes: List(Int),
+) -> BlockedBloomFilter {
+  list.fold(hashes, filter, add_hash)
+}
+
 /// True if the item may have been inserted; False means it never was.
 pub fn contains(filter: BlockedBloomFilter, item: BitArray) -> Bool {
   contains_hash(filter, hash.hash_bytes(item))

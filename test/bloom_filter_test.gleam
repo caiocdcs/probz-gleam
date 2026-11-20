@@ -109,3 +109,20 @@ pub fn vectors_test() {
   assert bloom_filter.serialize(f) == bytes
   assert bloom_filter.deserialize(bytes) == Ok(f)
 }
+
+pub fn add_many_matches_add_test() {
+  let assert Ok(f) = bloom_filter.new(1000, 0.01)
+  let items = vectors.items(0, 100)
+  let one_by_one = list.fold(items, f, bloom_filter.add)
+  assert bloom_filter.add_many(f, items) == one_by_one
+  assert bloom_filter.add_hash_many(f, list.map(items, hash.hash_bytes))
+    == one_by_one
+  assert bloom_filter.add_many(f, []) == f
+  // Same bytes as the golden vector.
+  assert bloom_filter.serialize(bloom_filter.add_many(f, items))
+    == vectors.get(
+      vectors.load("bloom_filter"),
+      ["serialized"],
+      vectors.hex_bytes(),
+    )
+}
