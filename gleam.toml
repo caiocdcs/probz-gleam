@@ -1,5 +1,5 @@
 name = "probz"
-version = "0.1.0"
+version = "0.2.0"
 description = "Probabilistic data structures (Bloom, cuckoo, quotient filters, HyperLogLog, Count-Min, t-digest, MinHash LSH...) with a portable wire format"
 licences = ["MIT"]
 repository = { type = "github", user = "caiocdcs", repo = "probz-gleam" }
