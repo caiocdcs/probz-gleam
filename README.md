@@ -183,8 +183,9 @@ bytes for fixed inputs, and `gleam test` replays all of them.
 
 ## Release
 
-Add a `## [X.Y.Z]` section to `CHANGELOG.md`, then `just release X.Y.Z` and
-`just push`. The tag publishes a Forgejo release with that section as notes.
+Add a `## [X.Y.Z]` section to `CHANGELOG.md`, then `just release X.Y.Z`
+(checks, bumps the version, commits and tags) and `just push` (main and tags
+to every remote).
 
 ## License
 

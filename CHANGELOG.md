@@ -35,6 +35,6 @@ All notable changes to this project are documented here. The format follows
   Bloom add and query are about 30% faster than with 64-bit words. The wire
   format is unchanged.
 
-[Unreleased]: https://forge.int.cdcs.dev/caiocdcs/probz-gleam/compare/v0.2.0...HEAD
-[0.2.0]: https://forge.int.cdcs.dev/caiocdcs/probz-gleam/compare/v0.1.0...v0.2.0
-[0.1.0]: https://forge.int.cdcs.dev/caiocdcs/probz-gleam/releases/tag/v0.1.0
+[Unreleased]: https://github.com/caiocdcs/probz-gleam/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/caiocdcs/probz-gleam/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/caiocdcs/probz-gleam/releases/tag/v0.1.0
