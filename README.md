@@ -100,6 +100,37 @@ Conventions shared by all structures:
 
 See [`dev/examples/`](dev/examples/) for a complete program per structure.
 
+### Keys
+
+Structures take a key as bytes (`add`) or as a 64-bit hash (`add_hash`), not
+as a generic type. That keeps every structure serializable and the bytes
+reproducible in any language: the hash is part of the format, so a filter
+never depends on a function you would have to pass back in after loading.
+Any Gleam value works once you turn it into one of the two:
+
+```gleam
+import probz/bloom_filter
+import probz/hash
+
+// Strings, ints, floats and bools have portable encodings (SPEC.md §2.1).
+let f = bloom_filter.add_hash(f, hash.hash_string("alice"))
+let f = bloom_filter.add_hash(f, hash.hash_int(user_id, bytes: 8))
+
+// Composite keys: combine field hashes, in order.
+let key = hash.hash_fields([hash.hash_string(order.shop), hash.hash_int(order.id, bytes: 8)])
+let f = bloom_filter.add_hash(f, key)
+
+// Lists, including nested ones.
+let f = bloom_filter.add_hash(f, hash.hash_list(tags, hash.hash_string))
+
+// Or build the bytes yourself.
+let f = bloom_filter.add(f, <<order.shop:utf8, 0, order.id:64>>)
+```
+
+`hash_fields` is `XXH64(u64le(h_1) ++ … ++ u64le(h_n))`, so another
+implementation can compute the same key. Wrap these in a small function per
+key type (`fn user_key(u: User) -> Int`) to keep keys typed in your code.
+
 ## Development
 
 The toolchain comes from the Nix flake.

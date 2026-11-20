@@ -6,6 +6,12 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `hash.hash_fields` and `hash.hash_list` for composite and list keys,
+  defined over the SPEC.md key hash so other ports can reproduce them.
+- README "Keys" section: how to use any Gleam value as a key.
+
 ## [0.1.0] - 2026-11-20
 
 ### Added
