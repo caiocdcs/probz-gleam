@@ -107,3 +107,25 @@ pub fn splitmix64_vectors_test() {
     assert got == outputs
   })
 }
+
+pub fn hash_fields_test() {
+  let a = hash.hash_string("alice")
+  let b = hash.hash_int(42, bytes: 8)
+  // XXH64 over each field hash as 8 little-endian bytes.
+  assert hash.hash_fields([a, b])
+    == hash.hash_bytes(<<a:little-size(64), b:little-size(64)>>)
+  assert hash.hash_fields([]) == hash.hash_bytes(<<>>)
+  // Order and arity matter.
+  assert hash.hash_fields([a, b]) != hash.hash_fields([b, a])
+  assert hash.hash_fields([a]) != hash.hash_fields([a, a])
+}
+
+pub fn hash_list_test() {
+  let words = ["x", "y", "z"]
+  assert hash.hash_list(words, hash.hash_string)
+    == hash.hash_fields(list.map(words, hash.hash_string))
+  // Nested lists differ from their flattening.
+  let nested = [["x"], ["y", "z"]]
+  assert hash.hash_list(nested, hash.hash_list(_, hash.hash_string))
+    != hash.hash_list(["x", "y", "z"], hash.hash_string)
+}

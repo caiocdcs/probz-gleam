@@ -12,6 +12,7 @@
 
 import gleam/bit_array
 import gleam/int
+import gleam/list
 import probz/internal/u64
 
 const p1 = 0x9E3779B185EBCA87
@@ -52,6 +53,25 @@ pub fn hash_bool(value: Bool) -> Int {
     True -> hash_bytes(<<1>>)
     False -> hash_bytes(<<0>>)
   }
+}
+
+/// Hash a composite key from the hashes of its fields, in order:
+/// `XXH64(u64le(h_1) ++ … ++ u64le(h_n))`. It only uses the key hash of
+/// SPEC.md §2.1, so any port can reproduce it, and field order matters.
+///
+/// ```gleam
+/// hash.hash_fields([hash.hash_string(user.name), hash.hash_int(user.id, bytes: 8)])
+/// ```
+pub fn hash_fields(hashes: List(Int)) -> Int {
+  hashes
+  |> list.fold(<<>>, fn(acc, h) { <<acc:bits, h:little-size(64)>> })
+  |> hash_bytes
+}
+
+/// Hash a list of values by hashing each one with `with`, then combining them
+/// with `hash_fields`. Lists nest: `hash_list(rows, hash_list(_, cell_hash))`.
+pub fn hash_list(items: List(a), with hash: fn(a) -> Int) -> Int {
+  hash_fields(list.map(items, hash))
 }
 
 /// XXH64 with an explicit seed.
