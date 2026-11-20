@@ -128,7 +128,9 @@ let f = bloom_filter.add(f, <<order.shop:utf8, 0, order.id:64>>)
 ```
 
 `hash_fields` is `XXH64(u64le(h_1) ++ … ++ u64le(h_n))`, so another
-implementation can compute the same key. Wrap these in a small function per
+implementation can compute the same key. It hashes once per field plus once
+more, so on a hot path hand-built bytes are cheaper: about 590 ns against
+1400 ns for a (string, int) key on an Apple M4. Wrap these in a small function per
 key type (`fn user_key(u: User) -> Int`) to keep keys typed in your code.
 
 ## Development

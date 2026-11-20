@@ -59,6 +59,12 @@ pub fn hash_bool(value: Bool) -> Int {
 /// `XXH64(u64le(h_1) ++ … ++ u64le(h_n))`. It only uses the key hash of
 /// SPEC.md §2.1, so any port can reproduce it, and field order matters.
 ///
+/// It runs XXH64 once per field plus once more, so a two-field key costs
+/// about twice as much as hashing the fields packed into one `BitArray`
+/// (`hash_bytes(<<name:utf8, 0, id:64>>)`). Prefer that on hot paths; prefer
+/// `hash_fields` when another port must reproduce the key without agreeing
+/// on a byte layout.
+///
 /// ```gleam
 /// hash.hash_fields([hash.hash_string(user.name), hash.hash_int(user.id, bytes: 8)])
 /// ```
